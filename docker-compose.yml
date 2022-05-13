@@ -15,7 +15,8 @@ version: "3"
       - certbot-etc:/etc/letsencrypt
     networks:
       - external
-   mysql:
+###########################################################################################################################  
+  mysql:
     image: mysql
     command: mysqld --default-authentication-plugin=mysql_native_password
     env_file: .env
@@ -25,6 +26,7 @@ version: "3"
       - ./data:/var/lib/mysql
     ports:
       - '3306:3306'
+##########################################################################################################################
    drupal:
     image: drupal:8.7.8-fpm-alpine
     container_name: drupal
@@ -36,6 +38,7 @@ version: "3"
       - external
     volumes:
       - drupal-data:/var/www/html
+ #####################################################################################################################
    certbot:
     depends_on:
       - nginx
@@ -45,8 +48,14 @@ version: "3"
       - certbot-etc:/etc/letsencrypt
       - drupal-data:/var/www/html
     command: certonly --webroot --webroot-path=/var/www/html --email mulugetadawit55@gmail.com --agree-tos --no-eff-email --force-renewal -d  drupal.3.110.209.93.nip.io -d www.drupal.3.110.209.93.nip.io
-
-
+   php:
+    container_name: php
+    image: php:8.0-apache
+    volumes:
+      - ./php/src:/var/www/html/
+    ports:
+      - 8000:80
+#################################################################################################################################################
    redis:
     image: redis:6.2-alpine
     restart: always
